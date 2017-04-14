@@ -1,4 +1,5 @@
 /* Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+ * Copyright (C) 2017 Paul Keith <javelinanddart@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -24,6 +25,7 @@
 #include <linux/platform_device.h>
 #include <linux/of.h>
 #include <mach/cpufreq.h>
+#include <linux/cpufreq_limit.h>
 
 static int enabled;
 static struct msm_thermal_data msm_thermal_info;
@@ -244,6 +246,7 @@ static void __cpuinit disable_msm_thermal(void)
 	flush_scheduled_work();
 
 	if (limited_max_freq == MSM_CPUFREQ_NO_LIMIT)
+	if (info.limited_max_freq == max_freq)
 		return;
 
 	for_each_possible_cpu(cpu) {
@@ -298,6 +301,11 @@ static int __cpuinit update_offline_cores(int val)
 	}
 	return ret;
 }
+	get_online_cpus();
+	pr_info("%s: Setting max frequency to %d\n",
+			KBUILD_MODNAME, info.limited_max_freq);
+	thermal_throttle(max_freq, info.throttling);
+	put_online_cpus();
 
 static ssize_t show_cc_enabled(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
@@ -316,6 +324,17 @@ static ssize_t __cpuinit store_cc_enabled(struct kobject *kobj,
 	if (ret) {
 		pr_err("%s: Invalid input %s\n", KBUILD_MODNAME, buf);
 		goto done_store_cc;
+	tsens_dev.sensor_num = msm_thermal_info.sensor_id;
+	tsens_get_temp(&tsens_dev, &temp);
+
+	if (info.throttling)
+	{
+		if (temp < (temp_threshold - info.safe_diff))
+		{
+			info.throttling = false;
+			thermal_throttle(info.cpuinfo_max_freq, info.throttling);
+			goto reschedule;
+		}
 	}
 
 	if (core_control_enabled == !!val)
@@ -353,6 +372,12 @@ static ssize_t __cpuinit store_cpus_offlined(struct kobject *kobj,
 	if (ret) {
 		pr_err("%s: Invalid input %s\n", KBUILD_MODNAME, buf);
 		goto done_cc;
+	if (freq)
+	{
+		if (!info.throttling)
+			info.throttling = true;
+
+		limit_cpu_freqs(freq);
 	}
 
 	if (enabled) {
