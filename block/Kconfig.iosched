@@ -55,7 +55,7 @@ config IOSCHED_ZEN
 	---help---
 	  FCFS, dispatches are back-inserted, deadlines ensure fairness.
 	  Should work best with devices where there is no travel delay.
-	
+
 config IOSCHED_CFQ
 	tristate "CFQ I/O scheduler"
 	# If BLK_CGROUP is a module, CFQ has to be built as module.
@@ -108,6 +108,17 @@ config IOSCHED_FIOPS
           IOPS equally among all processes in the system. It's mainly for
           Flash based storage.
 
+config IOSCHED_SWITCHER
+	bool "Use Noop while the screen is off"
+	depends on IOSCHED_NOOP
+	---help---
+	  This enables a driver that switches the I/O scheduler for a single
+	  block device to Noop when the screen turns off, and back to its
+	  original I/O scheduler after a delay when the screen is turned back
+	  on. It requires being manually initialized from a different driver
+	  in order to grab the request_queue pointer that should have its I/O
+	  scheduler switched to Noop when the screen turns off.
+
 choice
 	prompt "Default I/O scheduler"
 	default DEFAULT_CFQ
@@ -146,7 +157,7 @@ choice
 
 	config DEFAULT_ZEN
 		bool "ZEN" if IOSCHED_ZEN=y
-		
+
 	config DEFAULT_TRIPNDROID
 		bool "TRIPNDROID" if IOSCHED_TRIPNDROID=y
 
