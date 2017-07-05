@@ -18,8 +18,12 @@ CONFIG_NAMESPACES=y
 # CONFIG_PID_NS is not set
 # CONFIG_NET_NS is not set
 CONFIG_BLK_DEV_INITRD=y
+<<<<<<< HEAD:arch/arm/configs/lineageos_jf_defconfig
 CONFIG_RD_LZMA=y
 CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+=======
+#CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+>>>>>>> b07d203... Fix build and flags:arch/arm/configs/side_jf_defconfig
 CONFIG_PANIC_TIMEOUT=5
 CONFIG_ASHMEM=y
 CONFIG_EMBEDDED=y
@@ -561,3 +565,9 @@ CONFIG_CRC_CCITT=y
 CONFIG_LIBCRC32C=y
 CONFIG_DECOMPRESS_LZMA=y
 CONFIG_FORCE_FAST_CHARGE=y
+<<<<<<< HEAD:arch/arm/configs/lineageos_jf_defconfig
+=======
+#CONFIG_KERNEL_LZ4=y
+CONFIG_IOSCHED_SWITCHER=y
+CONFIG_CC_OPTIMIZE_FOR_SPEED=y
+>>>>>>> b07d203... Fix build and flags:arch/arm/configs/side_jf_defconfig
