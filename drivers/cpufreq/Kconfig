@@ -87,25 +87,6 @@ config CPU_FREQ_DEFAULT_GOV_NIGHTMARE
 	select CPU_FREQ_GOV_NIGHTMARE
 	help
 	
-config CPU_FREQ_DEFAULT_GOV_PEGASUSQ
-	bool "pegasusq"
-	select CPU_FREQ_GOV_PEGASUSQ
-	help
-	Use the CPUFreq governor 'pegasusq' as default.
-	 
-config CPU_FREQ_DEFAULT_GOV_SLP
-	bool "slp"
-	select CPU_FREQ_GOV_SLP
-	help
-	Use the CPUFreq governor 'slp' as default.
-
-config CPU_FREQ_DEFAULT_GOV_SMARTASSH3
-	bool "smartassH3"
-	select CPU_FREQ_GOV_SMARTASSH3
-	help
-	  Use the CPUFreq governor 'slp' as default.
-
-	
 config CPU_FREQ_DEFAULT_GOV_DANCEDANCE
 	bool "dancedance"
 	select CPU_FREQ_GOV_DANCEDANCE
@@ -226,12 +207,6 @@ config CPU_FREQ_GOV_BADASS
 config CPU_FREQ_GOV_DANCEDANCE
 	tristate "'dancedance' cpufreq governor"
 	depends on CPU_FREQ	
-	
-config CPU_FREQ_GOV_PEGASUSQ
-	tristate "'pegasusq' cpufreq policy governor"
-	
-config CPU_FREQ_GOV_SLP
-	tristate "'slp' cpufreq policy governor"
 
 config CPU_FREQ_GOV_SMARTASSH3
 	tristate "'smartassH3' cpufreq governor"
