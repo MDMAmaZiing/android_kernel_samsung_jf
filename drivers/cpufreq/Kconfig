@@ -82,6 +82,12 @@ config CPU_FREQ_DEFAULT_GOV_NIGHTMARE
 	bool "nightmare"
 	select CPU_FREQ_GOV_NIGHTMARE
 	help
+	
+config CPU_FREQ_DEFAULT_GOV_BIOSHOCK
+	bool "BioShock"
+	select CPU_FREQ_GOV_BIOSHOCK
+	help
+	    Default governor of BioShock kernel
 
 config CPU_FREQ_DEFAULT_GOV_SMARTASSH3
 	bool "smartassH3"
@@ -192,11 +198,17 @@ config CPU_FREQ_GOV_DANCEDANCE
 	tristate "'dancedance' cpufreq governor"
 	depends on CPU_FREQ	
 
+config CPU_FREQ_GOV_BIOSHOCK
+	tristate "'bioshock' cpufreq bioshock"
+	depends on CPU_FREQ
+	help
+	  'bioshock' - More aggressive version of conservative
+
 config CPU_FREQ_GOV_SMARTASSH3
 	tristate "'smartassH3' cpufreq governor"
 	depends on CPU_FREQ
 	help
-    		'smartassH3' - a "smart" governo
+        'smartassH3' - a "smart" governo
 
 config CPU_FREQ_GOV_WHEATLEY
 	tristate "'wheatley' cpufreq governor"
