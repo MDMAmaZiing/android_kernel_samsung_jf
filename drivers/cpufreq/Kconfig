@@ -86,6 +86,12 @@ config CPU_FREQ_DEFAULT_GOV_NIGHTMARE
 	bool "nightmare"
 	select CPU_FREQ_GOV_NIGHTMARE
 	help
+
+config CPU_FREQ_DEFAULT_GOV_SMARTASSH3
+	bool "smartassH3"
+	select CPU_FREQ_GOV_SMARTASSH3
+	help
+	  Use the CPUFreq governor 'slp' as default.
 	
 config CPU_FREQ_DEFAULT_GOV_DANCEDANCE
 	bool "dancedance"
