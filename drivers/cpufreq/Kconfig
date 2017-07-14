@@ -67,10 +67,6 @@ config CPU_FREQ_DEFAULT_GOV_PERFORMANCE
 	  Use the CPUFreq governor 'performance' as default. This sets
 	  the frequency statically to the highest frequency supported by
 	  the CPU.
-	  
-config CPU_FREQ_DEFAULT_GOV_ABYSSPLUG
-	bool "abyssplug"
-	select CPU_FREQ_GOV_ABYSSPLUG
 
 config CPU_FREQ_DEFAULT_GOV_ADAPTIVE
 	bool "adaptive"
@@ -177,24 +173,6 @@ config CPU_FREQ_GOV_PERFORMANCE
 	  module will be called cpufreq_performance.
 
 	  If in doubt, say Y.
-	
-config CPU_FREQ_GOV_ABYSSPLUG
-	tristate "'abyssplug' cpufreq governor"
-	depends on CPU_FREQ && NO_HZ && HOTPLUG_CPU
-	---help---
-	  'abyssplug' - this driver mimics the frequency scaling behavior
-	  in 'ondemand', but with several key differences.  First is
-	  that frequency transitions use the CPUFreq table directly,
-	  instead of incrementing in a percentage of the maximum
-	  available frequency.  Second 'abyssplug' will offline auxillary
-	  CPUs when the system is idle, and online those CPUs once the
-	  system becomes busy again.  This last feature is needed for
-	  architectures which transition to low power states when only
-	  the "master" CPU is online, or for thermally constrained
-	  devices.
-	  If you don't have one of these architectures or devices, use
-	  'ondemand' instead.
-	  If in doubt, say N.
 	
 config CPU_FREQ_GOV_ADAPTIVE
 	tristate "'adaptive' cpufreq policy governor"
