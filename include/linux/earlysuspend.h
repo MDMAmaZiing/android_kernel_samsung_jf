@@ -53,8 +53,3 @@ void unregister_early_suspend(struct early_suspend *handler);
 #endif
 
 #endif
-
-<<<<<<< HEAD
-=======
-
->>>>>>> d46faea... Add InteractiveX CPU governor (Pafcholini)
