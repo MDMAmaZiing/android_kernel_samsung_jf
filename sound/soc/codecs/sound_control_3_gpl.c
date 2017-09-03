@@ -36,23 +36,22 @@ int tabla_write(struct snd_soc_codec *codec, unsigned int reg,
 		unsigned int value);
 
 
-#define REG_SZ	22
+#define REG_SZ	25
 static unsigned int cached_regs[] = {6, 6, 0, 0, 0, 0, 0, 0, 0, 0,
 			    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			    0, 0 };
+			    0, 0, 0, 0, 0 };
 
 static unsigned int *cache_select(unsigned int reg)
 {
 	unsigned int *out = NULL;
 
         switch (reg) {
-/*                case TABLA_A_RX_HPH_L_GAIN:
+                case TABLA_A_RX_HPH_L_GAIN:
 			out = &cached_regs[0];
 			break;
                 case TABLA_A_RX_HPH_R_GAIN:
 			out = &cached_regs[1];
 			break;
-*/
                 case TABLA_A_CDC_RX1_VOL_CTL_B2_CTL:
 			out = &cached_regs[4];
 			break;
@@ -143,14 +142,13 @@ int snd_hax_reg_access(unsigned int reg)
 	int ret = 1;
 
 	switch (reg) {
-/*		case TABLA_A_RX_HPH_L_GAIN:
+		case TABLA_A_RX_HPH_L_GAIN:
 		case TABLA_A_RX_HPH_R_GAIN:
 		case TABLA_A_RX_HPH_L_STATUS:
 		case TABLA_A_RX_HPH_R_STATUS:
 			if (snd_ctrl_locked > 1)
 				ret = 0;
 			break;
-*/
 		case TABLA_A_CDC_RX1_VOL_CTL_B2_CTL:
 		case TABLA_A_CDC_RX2_VOL_CTL_B2_CTL:
 		case TABLA_A_CDC_RX3_VOL_CTL_B2_CTL:
@@ -201,26 +199,23 @@ static bool calc_checksum(unsigned int a, unsigned int b, unsigned int c)
 static ssize_t cam_mic_gain_show(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
-        return sprintf(buf, "%u %u\n",
+        return sprintf(buf, "%u\n",
 		tabla_read(fauxsound_codec_ptr,
-				TABLA_A_CDC_TX3_VOL_CTL_GAIN),
-			tabla_read(fauxsound_codec_ptr,
-				TABLA_A_CDC_TX4_VOL_CTL_GAIN));
+			TABLA_A_CDC_TX6_VOL_CTL_GAIN));
 
 }
 
 static ssize_t cam_mic_gain_store(struct kobject *kobj,
 		struct kobj_attribute *attr, const char *buf, size_t count)
 {
-	unsigned int lval;
+	unsigned int lval, chksum;
 
-	sscanf(buf, "%u", &lval);
+	sscanf(buf, "%u %u", &lval, &chksum);
 
+	if (calc_checksum(lval, 0, chksum)) {
 		tabla_write(fauxsound_codec_ptr,
-			TABLA_A_CDC_TX3_VOL_CTL_GAIN, lval);
-		tabla_write(fauxsound_codec_ptr,
-			TABLA_A_CDC_TX4_VOL_CTL_GAIN, lval);
-
+			TABLA_A_CDC_TX6_VOL_CTL_GAIN, lval);
+	}
 	return count;
 }
 
@@ -229,7 +224,7 @@ static ssize_t mic_gain_show(struct kobject *kobj,
 {
 	return sprintf(buf, "%u\n",
 		tabla_read(fauxsound_codec_ptr,
-			TABLA_A_CDC_TX4_VOL_CTL_GAIN));
+			TABLA_A_CDC_TX7_VOL_CTL_GAIN));
 }
 
 static ssize_t mic_gain_store(struct kobject *kobj,
@@ -241,7 +236,7 @@ static ssize_t mic_gain_store(struct kobject *kobj,
 
 	if (calc_checksum(lval, 0, chksum)) {
 		tabla_write(fauxsound_codec_ptr,
-			TABLA_A_CDC_TX4_VOL_CTL_GAIN, lval);
+			TABLA_A_CDC_TX7_VOL_CTL_GAIN, lval);
 	}
 	return count;
 
@@ -300,7 +295,6 @@ static ssize_t headphone_gain_store(struct kobject *kobj,
 	return count;
 }
 
-/*
 static ssize_t headphone_pa_gain_show(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
@@ -337,7 +331,7 @@ static ssize_t headphone_pa_gain_store(struct kobject *kobj,
 	}
 	return count;
 }
-*/
+
 static unsigned int selected_reg = 0xdeadbeef;
 
 static ssize_t sound_reg_select_store(struct kobject *kobj,
@@ -461,13 +455,13 @@ static struct kobj_attribute headphone_gain_attribute =
 		0666,
 		headphone_gain_show,
 		headphone_gain_store);
-/*
+
 static struct kobj_attribute headphone_pa_gain_attribute =
 	__ATTR(gpl_headphone_pa_gain,
 		0666,
 		headphone_pa_gain_show,
 		headphone_pa_gain_store);
-*/
+
 static struct kobj_attribute sound_control_locked_attribute =
 	__ATTR(gpl_sound_control_locked,
 		0666,
@@ -496,7 +490,7 @@ static struct attribute *sound_control_attrs[] =
 		&mic_gain_attribute.attr,
 		&speaker_gain_attribute.attr,
 		&headphone_gain_attribute.attr,
-//		&headphone_pa_gain_attribute.attr,
+		&headphone_pa_gain_attribute.attr,
 		&sound_control_locked_attribute.attr,
 		&sound_control_rec_locked_attribute.attr,
 		&sound_reg_sel_attribute.attr,
