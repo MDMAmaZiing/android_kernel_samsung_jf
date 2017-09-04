@@ -102,11 +102,19 @@ config MSM_KGSL_FPS_NODE_ENABLE
 	default n
 	---help---
 	  The fps node will control by SurfaceFlinger.
+<<<<<<< HEAD
 	  SurfaceFlinger update fps and max_fps node and use it.
+=======
+      SurfaceFlinger update fps and max_fps node and use it.
+>>>>>>> c5c4fec... kgsl: properly add simple_gpu_gov
 
 config MSM_KGSL_SIMPLE_GOV
 	bool "Simple KGSL GPU govenor for Qualcomm Adreno xxx devices"
 	default n
 	depends on MSM_KGSL
 	---help---
+<<<<<<< HEAD
 	  A simple KGSL GPU govenor for Qualcom Adreno XXX devices
+=======
+      A simple KGSL GPU govenor for Qualcom Adreno XXX devices
+>>>>>>> c5c4fec... kgsl: properly add simple_gpu_gov
