@@ -433,7 +433,6 @@ obj-$(CONFIG_MSM_CPU_PWRCTL) +=  msm_cpu_pwrctl.o
 
 obj-$(CONFIG_HAS_MACH_MEMUTILS) += memutils/
 obj-$(CONFIG_ARCH_RANDOM) += early_random.o
-<<<<<<< HEAD
 obj-$(CONFIG_AUTOSMP) += autosmp.o
 
 ifdef CONFIG_SEC_THERMISTOR
@@ -447,9 +446,5 @@ obj-$(CONFIG_CPU_FREQ_MSM) += cpufreq.o
 obj-$(CONFIG_FORCE_FAST_CHARGE) += fastchg.o
 
 obj-$(CONFIG_MSM_CPUFREQ_LIMITER) += cpufreq_limit.o
-=======
-obj-$(CONFIG_PERFMAP) += perfmap.o
-obj-$(CONFIG_MMI_UNIT_INFO) += mmi-unit-info.o
-obj-$(CONFIG_MMI_SOC_INFO) += mmi_soc_info.o
+
 obj-$(CONFIG_MSM_SLEEPER) += msm-sleeper.o
->>>>>>> c334406... msm-sleeper: CPU hotplug driver
