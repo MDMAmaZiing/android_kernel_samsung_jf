@@ -469,7 +469,7 @@ static ssize_t store_ignore_nice_load(struct kobject *a, struct attribute *b,
 		struct cpu_bds_info_s *bds_info;
 		bds_info = &per_cpu(od_cpu_bds_info, j);
 		bds_info->prev_cpu_idle = get_cpu_idle_time(j,
-						&bds_info->prev_cpu_wall, io_is_busy);
+						&bds_info->prev_cpu_wall, 0);
 		if (bds_tuners_ins.ignore_nice)
 			bds_info->prev_cpu_nice = kcpustat_cpu(j).cpustat[CPUTIME_NICE];
 
@@ -842,7 +842,7 @@ static void bds_check_cpu(struct cpu_bds_info_s *this_bds_info)
 
 		j_bds_info = &per_cpu(od_cpu_bds_info, j);
 
-		cur_idle_time = get_cpu_idle_time(j, &cur_wall_time, io_is_busy);
+		cur_idle_time = get_cpu_idle_time(j, &cur_wall_time, 0);
 		cur_iowait_time = get_cpu_iowait_time(j, &cur_wall_time);
 
 		wall_time = (unsigned int) cputime64_sub(cur_wall_time,
@@ -1183,7 +1183,7 @@ static void bds_refresh_callback(struct work_struct *unused)
 		__cpufreq_driver_target(policy, policy->max,
 					CPUFREQ_RELATION_L);
 		this_bds_info->prev_cpu_idle = get_cpu_idle_time(cpu,
-				&this_bds_info->prev_cpu_wall, io_is_busy);
+				&this_bds_info->prev_cpu_wall, 0);
 	}
 	unlock_policy_rwsem_write(cpu);
 }
@@ -1282,7 +1282,7 @@ static int cpufreq_governor_bds(struct cpufreq_policy *policy,
 			j_bds_info->cur_policy = policy;
 
 			j_bds_info->prev_cpu_idle = get_cpu_idle_time(j,
-						&j_bds_info->prev_cpu_wall, io_is_busy);
+						&j_bds_info->prev_cpu_wall, 0);
 			if (bds_tuners_ins.ignore_nice) {
 				j_bds_info->prev_cpu_nice =
 						kcpustat_cpu(j).cpustat[CPUTIME_NICE];
@@ -1374,7 +1374,7 @@ static int __init cpufreq_gov_bds_init(void)
 	unsigned int i;
 	int cpu = get_cpu();
 
-	idle_time = get_cpu_idle_time_us(cpu, &wall);
+	idle_time = get_cpu_idle_time_us(cpu, &wall, 0);
 	put_cpu();
 	if (idle_time != -1ULL) {
 		/* Idle micro accounting is supported. Use finer thresholds */
