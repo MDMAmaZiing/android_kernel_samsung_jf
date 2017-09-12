@@ -25,13 +25,13 @@
 #define MSM_SLEEPER_MINOR_VERSION	1
 #define MSM_SLEEPER_ENABLED		1
 #define MSM_SLEEPER_DEBUG		0
-#define DELAY				HZ
+#define DELAY				    HZ
 #define DEF_UP_THRESHOLD		85
 #define DEF_MAX_ONLINE			4
-#define DEF_DOWN_COUNT_MAX		10 /* 1 sec */
-#define DEF_UP_COUNT_MAX		5 /* 0.5 sec */
-#define DEF_SUSPEND_MAX_ONLINE		4
-#define DEF_PLUG_ALL			1
+#define DEF_DOWN_COUNT_MAX		10  /* 1 sec */
+#define DEF_UP_COUNT_MAX		5   /* 0.5 sec */
+#define DEF_SUSPEND_MAX_ONLINE	1
+#define DEF_PLUG_ALL			0
 
 struct msm_sleeper_data {
 	unsigned int enabled;
@@ -49,7 +49,7 @@ struct msm_sleeper_data {
 	struct work_struct suspend_work;
 	struct work_struct resume_work;
 } sleeper_data = {
-	.enabled = MSM_SLEEPER_ENABLED, 
+	.enabled = MSM_SLEEPER_ENABLED,
 	.delay = DELAY,
 	.up_threshold = DEF_UP_THRESHOLD,
 	.max_online = DEF_MAX_ONLINE,
@@ -73,7 +73,7 @@ static inline void plug_cpu(void)
 	cpu = cpumask_next_zero(0, cpu_online_mask);
 	if (cpu < nr_cpu_ids)
 		cpu_up(cpu);
-		
+
 reset:
 	sleeper_data.down_count = 0;
 	sleeper_data.up_count = 0;
@@ -127,7 +127,7 @@ static void __ref hotplug_func(struct work_struct *work)
 		loadavg += cpufreq_quick_get_util(cpu);
 
 	loadavg /= num_online_cpus();
-	
+
 	if (loadavg >= sleeper_data.up_threshold) {
 		++sleeper_data.up_count;
 		if (sleeper_data.up_count > sleeper_data.up_count_max)
@@ -146,20 +146,20 @@ static void __ref hotplug_func(struct work_struct *work)
 		loadavg, num_online_cpus(), sleeper_data.up_count, sleeper_data.down_count);
 #endif
 
-reschedule:		
+reschedule:
 	reschedule_timer();
 }
 
 static void msm_sleeper_suspend(struct work_struct *work)
 {
 	int cpu;
-	
+
 	sleeper_data.suspended = true;
-	
+
 	for_each_possible_cpu(cpu) {
 		if (sleeper_data.suspend_max_online == num_online_cpus())
 			break;
-			
+
 		if (cpu && cpu_online(cpu))
 			cpu_down(cpu);
 	}
@@ -170,7 +170,7 @@ static void __ref msm_sleeper_resume(struct work_struct *work)
 	int cpu;
 
 	sleeper_data.suspended = false;
-	
+
 
 	if (sleeper_data.max_online == 2) {
 		if (cpu_is_offline(1)) {
@@ -182,7 +182,7 @@ static void __ref msm_sleeper_resume(struct work_struct *work)
 				cpu_up(cpu);
 			}
 		}
-	} 
+	}
 }
 
 static int fb_notifier_callback(struct notifier_block *this,
@@ -226,11 +226,11 @@ static ssize_t __ref store_enable_hotplug(struct device *dev,
 {
 	int ret, cpu;
 	unsigned long val;
-	
+
 	ret = kstrtoul(buf, 0, &val);
 	if (ret < 0)
 		return ret;
-	
+
 	sleeper_data.enabled = val;
 
 	if (sleeper_data.enabled) {
@@ -287,7 +287,7 @@ static ssize_t store_max_online(struct device *dev,
 	ret = kstrtoul(buf, 0, &val);
 	if (ret < 0 || val < 2 || val > NR_CPUS)
 		return -EINVAL;
-	
+
 	for_each_possible_cpu(cpu) {
 		if (cpu >= val)
 			if (cpu_online(cpu))
@@ -439,21 +439,21 @@ static int msm_sleeper_probe(struct platform_device *pdev)
 	if (ret) {
 		ret = -EINVAL;
 		goto err_dev;
-	}	
+	}
 
 	sleeper_data.notif.notifier_call = fb_notifier_callback;
 	if (fb_register_client(&sleeper_data.notif)) {
 		ret = -EINVAL;
 		goto err_dev;
-	}	
-	
+	}
+
 	INIT_WORK(&sleeper_data.resume_work, msm_sleeper_resume);
 	INIT_WORK(&sleeper_data.suspend_work, msm_sleeper_suspend);
 	INIT_DELAYED_WORK(&sleeper_work, hotplug_func);
-	
+
 	if (sleeper_data.enabled)
 		queue_delayed_work_on(0, sleeper_wq, &sleeper_work, HZ * 60);
-	
+
 	return ret;
 
 err_dev:
