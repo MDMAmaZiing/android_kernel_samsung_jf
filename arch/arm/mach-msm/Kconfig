@@ -3051,10 +3051,4 @@ config AUTOSMP
 	help
 	  Automatically hotplugs the multiple CPU cores based on
 	  CPU load and suspend state.
-
-config MSM_SLEEPER
-	bool "CPU hotplug driver"
-	default y
-	help
-	  CPU hotplug driver
 endif
