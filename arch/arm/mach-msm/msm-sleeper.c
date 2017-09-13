@@ -170,6 +170,7 @@ static void __ref msm_sleeper_resume(struct work_struct *work)
 	int cpu;
 
 	sleeper_data.suspended = false;
+<<<<<<< HEAD
 
 
 	if (sleeper_data.max_online == 2) {
@@ -177,11 +178,20 @@ static void __ref msm_sleeper_resume(struct work_struct *work)
 			cpu_up(1);
 		}
 	} else if (sleeper_data.plug_all) {
+=======
+	
+	if (sleeper_data.plug_all) {
+>>>>>>> parent of 3113204... msm-sleeper: fix dual core mode
 		for_each_possible_cpu(cpu) {
 			if (cpu && cpu_is_offline(cpu)) {
 				cpu_up(cpu);
 			}
 		}
+<<<<<<< HEAD
+=======
+	} else if (cpu_is_offline(1)) {
+		cpu_up(1);
+>>>>>>> parent of 3113204... msm-sleeper: fix dual core mode
 	}
 }
 
