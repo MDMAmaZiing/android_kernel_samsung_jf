@@ -26,15 +26,23 @@
 #define MSM_SLEEPER_MINOR_VERSION	1
 =======
 #define MSM_SLEEPER_MINOR_VERSION	0
+<<<<<<< HEAD
 >>>>>>> parent of e1cdb9b... msm-sleeper: add plug_all option and enable by default
 #define MSM_SLEEPER_ENABLED		0
 #define MSM_SLEEPER_DEBUG		0
 #define DELAY				    HZ
 #define DEF_UP_THRESHOLD		85
 #define DEF_MAX_ONLINE			2
+=======
+#define MSM_SLEEPER_ENABLED		1
+#define MSM_SLEEPER_DEBUG		0
+#define DELAY				HZ
+#define DEF_UP_THRESHOLD		80
+#define DEF_MAX_ONLINE			4
+>>>>>>> parent of 128b968... msm-sleeper: adjust some parameters
 #define DEF_DOWN_COUNT_MAX		10 /* 1 sec */
-#define DEF_UP_COUNT_MAX		5 /* 0.5 sec */
-#define DEF_SUSPEND_MAX_ONLINE		2
+#define DEF_UP_COUNT_MAX		4 /* 0.4 sec */
+#define DEF_SUSPEND_MAX_ONLINE		1
 
 struct msm_sleeper_data {
 	unsigned int enabled;
